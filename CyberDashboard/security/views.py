@@ -16,49 +16,22 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, confusion_matrix
 import joblib
 
-from rest_framework.renderers import JSONRenderer
-from security.serializers import AttackPercentageSerializer
+# Load the trained model and vectorizer
+# sql 
+model_filename = os.path.join(settings.BASE_DIR, 'ml_models/sql_svm_model.joblib')
+vectorizer_filename = os.path.join(settings.BASE_DIR, 'ml_models/sql_count_vectorizer.joblib')  # Assuming you saved the CountVectorizer
 
-# # sql injectction
-# # Load your dataset
-# data_sql = pd.read_csv(os.path.join(settings.BASE_DIR, 'ml_models/sql_injection_dataset.csv'))
+sql_svm_model = joblib.load(model_filename)
+sql_vectorizer = joblib.load(vectorizer_filename)
 
-# # Define the feature extractor
-# vectorizer_sql = CountVectorizer(token_pattern=r'\b\w+\b')
+# phishing
+model_filename = os.path.join(settings.BASE_DIR, 'ml_models/phishing_dt_model.joblib')
+vectorizer_filename = os.path.join(settings.BASE_DIR, 'ml_models/phishing_count_vectorizer.joblib')  # Assuming you saved the CountVectorizer
 
-# # Extract features
-# X = vectorizer_sql.fit_transform(data_sql['Query'])
-# y = data_sql['Label']
-
-# # # Split the dataset
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-# model_filename = os.path.join(settings.BASE_DIR, 'ml_models/sql_svm_model.joblib')   # Replace with the actual filename
-# sql_svm_model = joblib.load(model_filename)
-
-# # phishing 
-# data_phishing = pd.read_csv(os.path.join(settings.BASE_DIR, 'ml_models/phishing_site_urls.csv'))
+phishing_dt_model = joblib.load(model_filename)
+phishing_vectorizer = joblib.load(vectorizer_filename)
 
 
-# # Define the feature extractor
-# vectorizer_phishing = CountVectorizer(token_pattern=r'\b\w+\b')
-
-# # Extract features
-# X = vectorizer_phishing.fit_transform(data_phishing['URL'])
-# # y = data_phishing['Label']
-
-# # Load the trained model
-# model_filename =  os.path.join(settings.BASE_DIR, 'ml_models/phishing_DT_model.joblib')   # Replace with the actual filename
-# phishing_dt_model = joblib.load(model_filename)
-
-
-# # attack percentage 
-# attack_percentage_data = pd.read_csv(os.path.join(settings.BASE_DIR, 'ml_models/label_occurrences_kdd.csv'))
-
-# # Convert the DataFrame to a list of dictionaries
-# data_list = attack_percentage_data.to_dict(orient='records')
-
-# # Serialize the data using the serializer
-# serializer = AttackPercentageSerializer(data_list, many=True)
 
 
 
@@ -74,19 +47,39 @@ def investigation(request):
     return render(request, 'investigation.html')
 
 def prediction(request):
+    if request.method == "POST":
+        if 'sql' in request.POST:
+            sql_query = request.POST.get('sql_query')
+            sql_query = sql_vectorizer.transform([sql_query])
+            prediction = sql_svm_model.predict(sql_query)
+            if prediction[0] == 1:
+                messages.warning(request, "SQL Injection Attack Detected...")
+            else:
+                messages.success(request, "No SQL Injection Attack Detected...")
+
+        elif 'phishing' in request.POST:
+            url = request.POST.get('url')
+            url = phishing_vectorizer.transform([url])
+            prediction = phishing_dt_model.predict(url)
+            if prediction[0] == 1:
+                messages.warning(request, "Phishing Attack Detected...")
+            else:
+                messages.success(request, "No Phishing Attack Detected...")
     return render(request, 'prediction.html')
+
+
 
 def user_awareness(request):
     return render(request, 'user_awareness.html')
 
 def solutions(request):
-    return render(request, 'charts.html')
+    return render(request, 'solutions.html')
 
 import json
 
 def json_data(request):
     # json_data = os.path.join( settings.BASE_DIR, 'json_data/cyberattack.json')
-    with open(os.path.join( settings.BASE_DIR, 'json_data/cyberattack.json')) as json_file:
+    with open(os.path.join( settings.BASE_DIR, 'json_data/100_attacks.json')) as json_file:
                 data = json.load(json_file)
     return JsonResponse(data, safe=False)
 
@@ -147,67 +140,24 @@ def logout_page(request):
     messages.success(request, "You are Logged Out from Dashboard")
     return redirect('/')
 
+from ip2geotools.databases.noncommercial import DbIpCity
+import requests
 
+def get_geo_cordinates_ajax(request):
+    src_ip = request.GET.get('src_ip')
+    dst_ip = request.GET.get('dst_ip')
 
+    payload_src = {'key': '9B4C80763C9402E38824BDA5439E8BA8', 'ip': src_ip, 'format': 'json'}
+    api_result_src = requests.get('https://api.ip2location.io/', params=payload_src)
+    json_data_src = api_result_src.json()
 
+    payload_dst = {'key': '9B4C80763C9402E38824BDA5439E8BA8', 'ip': dst_ip, 'format': 'json'}
+    api_result_dst = requests.get('https://api.ip2location.io/', params=payload_dst)
+    json_data_dst = api_result_dst.json()
 
-
-
-# from rest_framework.decorators import api_view
-# from rest_framework.response import Response
-# from security.models import *
-# from security.serializers import *
-
-# @api_view(['GET'])
-# def home(request):
-#     return Response(serializer.data)
-
-
-# @api_view(['GET', 'PUT'])
-# def sql(request):
-#     if request.method == "GET":
-#         sql_accuracies = Accuracy_SQL.objects.all()
-#         sql_accuracies = AccuracySQLSerializer(sql_accuracies, many=True)
-#         return Response(sql_accuracies.data)
-#     if request.method == "PUT":
-#         data = request.data
-#         sql_query = data.get('sql_query')
-#         print(sql_query)
-#         # Preprocess the user input using the same CountVectorizer
-#         sql_query = vectorizer_sql.transform([sql_query])
-#         prediction = sql_svm_model.predict(sql_query)
-#         msg = "hello"
-#         if prediction[0] == 1:
-#             msg = "SQL Injection Attack Detected!"
-#         else:
-#             msg = "No SQL Injection Attack Detected."
-#         print(msg)
-#         data = {"message" : msg}
-#         # return redirect('/check-phishing-msg/' + phishing)
-#         return Response(data)
-
-
-
-# @api_view(['GET', 'PUT'])
-# def phishing(request):
-#     if request.method == "GET":
-#         phishing_accuracies = Accuracy_Phishing.objects.all()
-#         phishing_accuracies = AccuracyPhishingSerializer(phishing_accuracies, many=True)
-#         return Response(phishing_accuracies.data)
-#     if request.method == "PUT":
-#         data = request.data
-#         url = data.get('url')
-#         print(url)
-#         # Preprocess the user input using the same CountVectorizer
-#         url = vectorizer_phishing.transform([url])
-#         prediction = phishing_dt_model.predict(url)
-#         phishing = "hello"
-#         if prediction[0] == 1:
-#             phishing = "Phishing Attack Detected!"
-#         else:
-#             phishing = "No Phishing Attack Detected."
-#         print(phishing)
-#         data = {"message" : phishing}
-#         # return redirect('/check-phishing-msg/' + phishing)
-#         return Response(data)
-
+    print(json_data_src.get('latitude'))
+  
+    return JsonResponse({
+        'src' : [json_data_src.get('longitude'), json_data_src.get('latitude')],
+        'dst' : [json_data_dst.get('longitude'), json_data_dst.get('latitude')],
+    })

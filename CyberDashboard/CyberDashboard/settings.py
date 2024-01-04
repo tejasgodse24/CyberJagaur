@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'corsheaders',
     'security',
-    'rest_framework'
+    # 'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -144,3 +144,7 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+OPENAI_API_KEY = "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"
+sarthak_OPENAI_API_KEY = "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"
