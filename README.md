@@ -8,6 +8,4 @@
 8. "python manage.py migrate"
 9. "python manage.py runserver"
 10. after this server will start running on http://127.0.0.1:8000/
-11. phishing api --- http://127.0.0.1:8000/phshing
-12. sql api --- http://127.0.0.1:8000/sql
-13. all attack percentage api --- http://127.0.0.1:8000/attacks-percentage
+11. 
