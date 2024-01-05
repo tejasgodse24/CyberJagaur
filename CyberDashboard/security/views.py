@@ -3,17 +3,11 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-
 from django.contrib.auth.models import User
-
+import json
 import os
-
-import pandas as pd
-from sklearn.svm import SVC
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, confusion_matrix
+# from ip2geotools.databases.noncommercial import DbIpCity
+import requests
 import joblib
 
 # Load the trained model and vectorizer
@@ -31,22 +25,23 @@ vectorizer_filename = os.path.join(settings.BASE_DIR, 'ml_models/phishing_count_
 phishing_dt_model = joblib.load(model_filename)
 phishing_vectorizer = joblib.load(vectorizer_filename)
 
-
-
-
-
-
 # new work started
 def home(request):
     return render(request, 'sample.html')
 
 def index(request):
-    return render(request, 'index.html')
+    all_users = User.objects.all()
+    context = {
+        'no_of_users' : len(all_users)
+    }
+    return render(request, 'index.html', context)
 
-def investigation(request):
-    return render(request, 'investigation.html')
 
 def prediction(request):
+    all_users = User.objects.all()
+    context = {
+        'no_of_users' : len(all_users)
+    }
     if request.method == "POST":
         if 'sql' in request.POST:
             sql_query = request.POST.get('sql_query')
@@ -65,20 +60,25 @@ def prediction(request):
                 messages.warning(request, "Phishing Attack Detected...")
             else:
                 messages.success(request, "No Phishing Attack Detected...")
-    return render(request, 'prediction.html')
+    return render(request, 'prediction.html', context)
 
 
 
 def user_awareness(request):
-    return render(request, 'user_awareness.html')
+    all_users = User.objects.all()
+    context = {
+        'no_of_users' : len(all_users)
+    }
+    return render(request, 'user_awareness.html', context)
 
 def solutions(request):
-    return render(request, 'solutions.html')
-
-import json
+    all_users = User.objects.all()
+    context = {
+        'no_of_users' : len(all_users)
+    }
+    return render(request, 'solutions.html', context)
 
 def json_data(request):
-    # json_data = os.path.join( settings.BASE_DIR, 'json_data/cyberattack.json')
     with open(os.path.join( settings.BASE_DIR, 'json_data/100_attacks.json')) as json_file:
                 data = json.load(json_file)
     return JsonResponse(data, safe=False)
@@ -103,7 +103,6 @@ def login_page(request):
         
         if user_obj : 
             login(request, user_obj)
-            print("login")
             return redirect('/dashboard')
 
     return render(request, 'login.html')
@@ -134,14 +133,11 @@ def register_page(request):
     return render(request, 'register.html')
 
 
-# @login_required
 def logout_page(request):
     logout(request)
     messages.success(request, "You are Logged Out from Dashboard")
     return redirect('/')
 
-from ip2geotools.databases.noncommercial import DbIpCity
-import requests
 
 def get_geo_cordinates_ajax(request):
     src_ip = request.GET.get('src_ip')
@@ -155,7 +151,6 @@ def get_geo_cordinates_ajax(request):
     api_result_dst = requests.get('https://api.ip2location.io/', params=payload_dst)
     json_data_dst = api_result_dst.json()
 
-    print(json_data_src.get('latitude'))
   
     return JsonResponse({
         'src' : [json_data_src.get('longitude'), json_data_src.get('latitude')],

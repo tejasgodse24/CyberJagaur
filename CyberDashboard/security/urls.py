@@ -7,7 +7,6 @@ urlpatterns = [
     # path('phishing', views.phishing, name='phishing'),
     path('', views.home, name='home'),
     path('dashboard/', views.index, name='dashboard'),
-    path('investigation/', views.investigation, name='investigation'),
     path('prediction/', views.prediction, name='prediction'),
     path('user-awareness/', views.user_awareness, name='user_awareness'),
     path('solutions/', views.solutions, name='solutions'),
