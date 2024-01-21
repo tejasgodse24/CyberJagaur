@@ -1,158 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'basic.html' %}
 
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>CYBER JAGAUR - Dashboard</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="/media/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="/media/css/sb-admin-2.min.css" rel="stylesheet">
-
-</head>
-
-<body id="page-top">
-
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">CYBER JAGAUR</div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item ">
-                <a class="nav-link" href="/dashboard">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-
-                    <a class="nav-link active" href="/prediction" >
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span><b>Prediction</b></span>
-                    </a>
-                    <a class="nav-link" href="/user-awareness" >
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>User Awareness</span>
-                    </a>
-                    <a class="nav-link" href="/solutions" >
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>Solutions</span>
-                    </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-            
-
-            
-
-            
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-               
-            </li>
-
-            
-           
-            
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-            
-
-        </ul>
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Topbar Search -->
-                          <!-- Topbar Search -->
-                          <div
-                          class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                          <div class="input-group">
-                              <div class="font-weight-bold" style="color: black;">
-                                  <h4><b>
-                              <span>No. of Users : </span><span>{{no_of_users}}</span></b>
-                              </h4>
-                              
-                              </div>
-                          </div>
-                      </div>
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <div class="topbar-divider d-none d-sm-block"></div>
-                        {% if request.user.is_authenticated %}
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                    {{ request.user.first_name }}
-                                    {{request.user.last_name}}
-
-                                </span>
-                                <img class="img-profile rounded-circle"
-                                    src="/media/img/undraw_profile.svg">
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/logout" >
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
-                        </li>
-                        {% endif %}
-
-                        
-
-                    </ul>
-
-                </nav>
-                <!-- End of Topbar -->
+{% block body%} 
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -175,7 +23,7 @@
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1"><h2> SQL INJECTION</h2>
                                             </div>
                                             <div class="row no-gutters align-items-center">
-                                                <button class="btn btn-primary" onclick="openJupyterNotebook('SQL_ACCURACY.ipynb')">Click Me</button>
+                                                <button class="btn btn-primary" onclick="openJupyterNotebook('SQL_ACCURACY.ipynb')">Open Jupyter Notebooks</button>
                                             </div>
                                         </div>
                                         
@@ -193,7 +41,7 @@
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1"><h2> Phishing Attack</h2>
                                             </div>
                                             <div class="row no-gutters align-items-center">
-                                                <button class="btn btn-primary" onclick="openJupyterNotebook('Phishing.ipynb')">Click Me</button>
+                                                <button class="btn btn-primary" onclick="openJupyterNotebook('Phishing.ipynb')">Open Jupyter Notebooks</button>
                                             </div>
                                         </div>
                                         
@@ -212,10 +60,10 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1"><h2> sample attack</h2>
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1"><h2> DNS TUNNELING</h2>
                                             </div>
                                             <div class="row no-gutters align-items-center">
-                                                <button class="btn btn-primary" onclick="openJupyterNotebook('Phishing.ipynb')">Click Me</button>
+                                                <button class="btn btn-primary" onclick="openJupyterNotebook('DNS_tunelling.ipynb')">Open Jupyter Notebooks</button>
                                             </div>
                                         </div>
                                         
@@ -237,7 +85,7 @@
 
                     <div class="row">
                         <!-- Area Chart -->
-                        <div class="col-xl-6">
+                        <div class="col-xl-4">
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
@@ -251,7 +99,7 @@
                                         {% csrf_token %}
                                         <div class="form-group">
                                             <input type="text" name="sql_query" class="form-control form-control-user"
-                                                id="exampleInputEmail" 
+                                                id="sql_query" 
                                                 placeholder="Enter SQL Query to Test The Model...">
                                         </div>
                                         <button type="submit" name="sql" class="btn btn-primary btn-block">
@@ -264,7 +112,7 @@
                         </div>
 
                         <!-- Area Chart -->
-                        <div class="col-xl-6">
+                        <div class="col-xl-4">
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
@@ -278,10 +126,35 @@
                                         {% csrf_token %}
                                         <div class="form-group">
                                             <input type="text" name="url" class="form-control form-control-user"
-                                                id="exampleInputEmail" 
+                                                id="url" 
                                                 placeholder="Enter Any url to Test The Model...">
                                         </div>
                                         <button type="submit" name="phishing" class="btn btn-primary  btn-block">
+                                            CHECK
+                                        </button>
+                                        <hr>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">DNS TUNNELING TEST</h6>
+                                    
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <form method="post" class="user">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <input type="text" name="dns" class="form-control form-control-user"
+                                                id="dns" 
+                                                placeholder="Enter Any DNS to Test The Model...">
+                                        </div>
+                                        <button type="submit" name="dns-tunneling" class="btn btn-primary  btn-block">
                                             CHECK
                                         </button>
                                         <hr>
@@ -297,18 +170,40 @@
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">ACCURACY COMPARISON</h6>
                                 </div>
+                                
                                 <div class="card-body">
-                                    <div class="text-center">
-                                        <h3>SQL INJECTION</h3>
-                                        <img class="img-fluid mt-3 mb-4" style="width: 70rem;"
-                                            src="/media/img/sql_bar_plot.png" alt="...">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="text-center">
+                                                <h3>SQL INJECTION</h3>
+                                                <a href="http://127.0.0.1:8000/media/img/sql_bar_plot.png">
+                                                <img class="img-fluid" style="width: 70rem;"
+                                                    src="/media/img/sql_bar_plot.png" alt="...">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="text-center">
+                                                <h3>Phishing</h3>
+                                                <a href="http://127.0.0.1:8000/media/img/sql_bar_plot.png">
+                                                <img class="img-fluid" style="width: 70rem;"
+                                                    src="/media/img/sql_bar_plot.png" alt="...">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="text-center">
+                                                <h3>DNS Tunneling</h3>
+                                                <a href="http://127.0.0.1:8000/media/img/dns_bar_plot.png">
+                                                <img class="img-fluid" style="width: 70rem;"
+                                                    src="/media/img/dns_bar_plot.png" alt="...">
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
+                                    
 
-                                    <div class="text-center mt-5">
-                                        <h3>Phishing</h3>
-                                        <img class="img-fluid mt-3 mb-4" style="width: 70rem;"
-                                            src="/media/img/sql_bar_plot.png" alt="...">
-                                    </div>
+                                    
                                     
                                 </div>
                             </div>
@@ -323,35 +218,9 @@
 
         </div>
         <!-- End of Content Wrapper -->
+{% endblock %}
 
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-   
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="/media/vendor/jquery/jquery.min.js"></script>
-    <script src="/media/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="/media/js/index.js"></script> -->
-
-   
-    <!-- Core plugin JavaScript-->
-    <!-- <script src="/media/vendor/jquery-easing/jquery.easing.min.js"></script> -->
-
-    <!-- Custom scripts for all pages-->
-    <script src="/media/js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <!-- <script src="/media/vendor/chart.js/Chart.min.js"></script> -->
-
-    <!-- Page level custom scripts -->
-    <!-- <script src="/media/js/demo/chart-area-demo.js"></script>
-    <script src="/media/js/demo/chart-pie-demo.js"></script> -->
+{% block js %}
 
     <script>
 
@@ -366,7 +235,4 @@
     </script>
 
 
-
-</body>
-
-</html>
+{% endblock %}

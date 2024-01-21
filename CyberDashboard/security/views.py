@@ -25,6 +25,15 @@ vectorizer_filename = os.path.join(settings.BASE_DIR, 'ml_models/phishing_count_
 phishing_dt_model = joblib.load(model_filename)
 phishing_vectorizer = joblib.load(vectorizer_filename)
 
+
+# dns tunneling
+model_filename = os.path.join(settings.BASE_DIR, 'ml_models/dns_svm_model.joblib')
+vectorizer_filename = os.path.join(settings.BASE_DIR, 'ml_models/dns_count_vectorizer.joblib')  # Assuming you saved the CountVectorizer
+
+dns_svm_model = joblib.load(model_filename)
+dns_vectorizer = joblib.load(vectorizer_filename)
+
+
 # new work started
 def home(request):
     return render(request, 'sample.html')
@@ -60,6 +69,14 @@ def prediction(request):
                 messages.warning(request, "Phishing Attack Detected...")
             else:
                 messages.success(request, "No Phishing Attack Detected...")
+        elif 'dns-tunneling' in request.POST:
+            dns = request.POST.get('dns')
+            dns = dns_vectorizer.transform([dns])
+            prediction = dns_svm_model.predict(dns)
+            if prediction[0] == 1:
+                messages.warning(request, "DNS Tunneling Attack Detected...")
+            else:
+                messages.success(request, "No DNS Tunneling Attack Detected...")
     return render(request, 'prediction.html', context)
 
 
@@ -140,19 +157,20 @@ def logout_page(request):
 
 
 def get_geo_cordinates_ajax(request):
-    src_ip = request.GET.get('src_ip')
-    dst_ip = request.GET.get('dst_ip')
+    # src_ip = request.GET.get('src_ip')
+    # dst_ip = request.GET.get('dst_ip')
 
-    payload_src = {'key': '9B4C80763C9402E38824BDA5439E8BA8', 'ip': src_ip, 'format': 'json'}
-    api_result_src = requests.get('https://api.ip2location.io/', params=payload_src)
-    json_data_src = api_result_src.json()
+    # payload_src = {'key': '9B4C80763C9402E38824BDA5439E8BA8', 'ip': src_ip, 'format': 'json'}
+    # api_result_src = requests.get('https://api.ip2location.io/', params=payload_src)
+    # json_data_src = api_result_src.json()
 
-    payload_dst = {'key': '9B4C80763C9402E38824BDA5439E8BA8', 'ip': dst_ip, 'format': 'json'}
-    api_result_dst = requests.get('https://api.ip2location.io/', params=payload_dst)
-    json_data_dst = api_result_dst.json()
+    # payload_dst = {'key': '9B4C80763C9402E38824BDA5439E8BA8', 'ip': dst_ip, 'format': 'json'}
+    # api_result_dst = requests.get('https://api.ip2location.io/', params=payload_dst)
+    # json_data_dst = api_result_dst.json()
 
   
-    return JsonResponse({
-        'src' : [json_data_src.get('longitude'), json_data_src.get('latitude')],
-        'dst' : [json_data_dst.get('longitude'), json_data_dst.get('latitude')],
-    })
+    # return JsonResponse({
+    #     'src' : [json_data_src.get('longitude'), json_data_src.get('latitude')],
+    #     'dst' : [json_data_dst.get('longitude'), json_data_dst.get('latitude')],
+    # })
+    return JsonResponse({})
